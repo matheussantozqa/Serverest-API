@@ -31,7 +31,22 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  ""
+                  "pm.sendRequest({\r",
+                  "    url: 'https://serverest.dev/usuarios',\r",
+                  "    method: 'POST',\r",
+                  "    header: { 'Content-Type': 'application/json' },\r",
+                  "    body: {\r",
+                  "        mode: 'raw',\r",
+                  "        raw: JSON.stringify({\r",
+                  "            nome: \"Fulano da Silva\",\r",
+                  "            email: \"fulano@qa.com\",\r",
+                  "            password: \"teste\",\r",
+                  "            administrador: \"true\"\r",
+                  "        })\r",
+                  "    }\r",
+                  "}, function (err, res) {\r",
+                  "    console.log('Usuário criado:', res.json());\r",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -54,7 +69,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"email\": \"teteu@01.com.br\",\r\n  \"password\": \"teste\"\r\n}",
+              "raw": "{\r\n  \"email\": \"fulano@qa.com\",\r\n  \"password\": \"teste\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
