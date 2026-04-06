@@ -1,0 +1,680 @@
+{
+  "info": {
+    "_postman_id": "140a8647-757f-4f25-854a-331d8dc3d748",
+    "name": "ServeRest",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51016405",
+    "_collection_link": "https://go.postman.co/collection/51016405-140a8647-757f-4f25-854a-331d8dc3d748?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "LOGIN",
+      "item": [
+        {
+          "name": "LOGIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let responseJson = pm.response.json();\r",
+                  "let tokenSplit = responseJson['authorization'].split(' ');\r",
+                  "\r",
+                  "pm.environment.set(\"accessToken\", tokenSplit[1]);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"teteu@01.com.br\",\r\n  \"password\": \"teste\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/login",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "USER",
+      "item": [
+        {
+          "name": "USER REGISTER",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const randomNumber = Math.floor(Math.random() * 9000 ) \r",
+                  "const randomName = `User Number ${randomNumber}`;\r",
+                  "const randomEmail = `name.${randomNumber}@gmail.com`;\r",
+                  "\r",
+                  "pm.globals.set(\"email\", randomEmail)\r",
+                  "pm.globals.set(\"nome\", randomName)  \r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n{\r\n    \"nome\": \"{{nome}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"teste\",\r\n    \"administrador\": \"true\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/usuarios",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "LIST USERS",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/usuarios",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "SEARCH USER WITH ID",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRldGV1QHFhLmNvbS5iciIsInBhc3N3b3JkIjoidGVzdGUiLCJpYXQiOjE3NjcxMDk3MDUsImV4cCI6MTc2NzExMDMwNX0.LjKMm0VsDGXVaIUrRj2KVG9LL--W_l-0tKZZk-89wS0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/usuarios/bBA4UwVejE7W33ie",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "bBA4UwVejE7W33ie"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "EDIT USERS",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Teteuzz QA\",\r\n    \"email\": \"teteuZIN@qa.com.br\",\r\n    \"password\": \"UUUUUUU\",\r\n    \"administrador\": \"true\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/usuarios/wf9mJgWZhFmzwujV",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "wf9mJgWZhFmzwujV"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE USER",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/usuarios/DntsRdAs96dRWztS",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "DntsRdAs96dRWztS"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "PRODUCTS",
+      "item": [
+        {
+          "name": "ADD PRODUCTS",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const loginRequest = {\r",
+                  "    url: pm.environment.get(\"baseURL\") + \"/login\", \r",
+                  "    method: \"POST\",\r",
+                  "    body: {\r",
+                  "       mode: \"raw\",\r",
+                  "        raw: JSON.stringify({\r",
+                  "           email: pm.globals.get(\"email\"),\r",
+                  "           password: pm.environment.get(\"password\")\r",
+                  "       }),\r",
+                  "       options: {\r",
+                  "            raw: {\r",
+                  "                language: \"json\"\r",
+                  "            }\r",
+                  "        }    \r",
+                  "    }   \r",
+                  "}\r",
+                  "\r",
+                  "pm.sendRequest(loginRequest, function (err, response) {\r",
+                  "    let resJson = response.json()\r",
+                  "    let tokenSplit = resJson[\"authorization\"].split(\" \")\r",
+                  "    pm.environment.set(\"accessToken\", tokenSplit[1])\r",
+                  "});  \r",
+                  "\r",
+                  "pm.globals.set(\"randomProduct\", `Product ${Math.random()}`)\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "if (pm.response.code == 201) {\r",
+                  "    pm.globals.set(\"newProductId\", pm.response.json()._id);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"{{randomProduct}}\",\r\n  \"preco\": 100,\r\n  \"descricao\": \"Comida\",\r\n  \"quantidade\": 80\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/produtos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "LIST PRODUCTS",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/produtos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "SEARCH PRODUCT WITH ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "pm.test(\"Response time is less than 200ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/produtos/{{newProductId}}",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "produtos",
+                "{{newProductId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "EDIT PRODUCTS",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRldGV1QHFhLmNvbS5iciIsInBhc3N3b3JkIjoidGVzdGUiLCJpYXQiOjE3NjcxMTI3NjcsImV4cCI6MTc2NzExMzM2N30.JVoprnNTRS49C3UZPQnVgEAdIngKPRsEq4Yy_0vi1O4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Pano de Gato\",\"preco\":35000,\"descricao\":\"cozinha\",\"quantidade\":12}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/produtos/vPCm8FIaEBE5Iw9G",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "produtos",
+                "vPCm8FIaEBE5Iw9G"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE PRODUCTS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Product deleted successfully\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Registro excluído com sucesso\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/produtos/{{newProductId}}",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "produtos",
+                "{{newProductId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CART",
+      "item": [
+        {
+          "name": "CART REGISTER",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRldGV1QHFhLmNvbS5iciIsInBhc3N3b3JkIjoidGVzdGUiLCJpYXQiOjE3NjcxMTQ0MDgsImV4cCI6MTc2NzExNTAwOH0.KyCFMrVSz1zkQGewKuMwqVt5DDhhklxIq9e67xf1hOo",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"BeeJh5lz3k6kSIzA\",\r\n      \"quantidade\": 12\r\n    },\r\n    {\r\n      \"idProduto\": \"vPCm8FIaEBE5Iw9G\",\r\n      \"quantidade\": 5\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/carrinhos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "carrinhos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "LIST CART",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRldGV1QHFhLmNvbS5iciIsInBhc3N3b3JkIjoidGVzdGUiLCJpYXQiOjE3NjcxMTMyMTQsImV4cCI6MTc2NzExMzgxNH0.u6Wc879zqFZPLR8WczNmnkpynR7WY_NvqMhFVtPJybw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/carrinhos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "carrinhos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "SEARCH CART WITH ID",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRldGV1QHFhLmNvbS5iciIsInBhc3N3b3JkIjoidGVzdGUiLCJpYXQiOjE3NjcxMTMyMTQsImV4cCI6MTc2NzExMzgxNH0.u6Wc879zqFZPLR8WczNmnkpynR7WY_NvqMhFVtPJybw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/carrinhos/KZHrmdoryjLBvyZW",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "carrinhos",
+                "KZHrmdoryjLBvyZW"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "FINISH THE PURCHASE AND THEN DELETE THE CART",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRldGV1QHFhLmNvbS5iciIsInBhc3N3b3JkIjoidGVzdGUiLCJpYXQiOjE3NjcxMTQyMzksImV4cCI6MTc2NzExNDgzOX0.eEtGa4VTnc0hxLZnE871vNsPlYp4QEMVaPLQ_lN3yVE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/carrinhos/concluir-compra",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "carrinhos",
+                "concluir-compra"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CANCEL PURCHASE",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRldGV1QHFhLmNvbS5iciIsInBhc3N3b3JkIjoidGVzdGUiLCJpYXQiOjE3NjcxMTQyMzksImV4cCI6MTc2NzExNDgzOX0.eEtGa4VTnc0hxLZnE871vNsPlYp4QEMVaPLQ_lN3yVE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/carrinhos/cancelar-compra",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "carrinhos",
+                "cancelar-compra"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
