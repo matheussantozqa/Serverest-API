@@ -1,0 +1,73 @@
+name: ServeRest API Tests
+ 
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+ 
+jobs:
+  api-tests:
+    name: Run Postman Collection (Newman)
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+ 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+ 
+      - name: Install Newman and HTML reporter
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+ 
+      - name: Set baseURL in environment file
+        run: |
+          # Substitui o valor do baseURL no arquivo de ambiente pelo valor da variável de ambiente do Actions
+          sed -i 's|"key": "baseURL",\n\s*"value": ""|"key": "baseURL", "value": "${{ vars.BASE_URL }}"|' "ServeRest Dev.postman_environment.json" || true
+          # Alternativa mais robusta usando python
+          python3 -c "
+          import json, os
+ 
+          env_file = 'ServeRest Dev.postman_environment.json'
+          with open(env_file, 'r') as f:
+              data = json.load(f)
+ 
+          for var in data['values']:
+              if var['key'] == 'baseURL':
+                  var['value'] = os.environ.get('BASE_URL', 'https://serverest.dev')
+              if var['key'] == 'password':
+                  var['value'] = os.environ.get('API_PASSWORD', 'teste')
+ 
+          with open(env_file, 'w') as f:
+              json.dump(data, f, indent=2)
+          "
+        env:
+          BASE_URL: ${{ vars.BASE_URL || 'https://serverest.dev' }}
+          API_PASSWORD: ${{ secrets.API_PASSWORD || 'teste' }}
+ 
+      - name: Run Newman tests
+        run: |
+          newman run "ServeRest.postman_collection.json" \
+            --environment "ServeRest Dev.postman_environment.json" \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export results/report.html \
+            --reporter-htmlextra-title "ServeRest API Test Report" \
+            --reporter-htmlextra-browserTitle "ServeRest Tests" \
+            --color on \
+            --bail
+ 
+      - name: Upload HTML test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-report
+          path: results/report.html
+          retention-days: 30
